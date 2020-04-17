@@ -90,7 +90,13 @@ window.onload = async () => {
     if (diff === 0) {
       diffText = "±0";
     } else {
-      diffText = diff >= 10 ? `<span class="plus up">+${diff}</span>` : `<span class="plus">+${diff}</span>`
+      if (diff < 0) {
+	diffText = `<span class="plus">${diff}</span>`
+      } else if (diff < 10) {
+	diffText = `<span class="plus">+${diff}</span>`
+      } else {
+	diffText = `<span class="plus up">+${diff}</span>`
+      }
     }
     let level = 1
     if (i < data[0].length - 2) {
