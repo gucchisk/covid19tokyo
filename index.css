@@ -38,23 +38,35 @@ h2 {
 .plus {
     font-weight: bold;
 }
-.up {
-    color: red;
-}
 .level5 {
     color: white;
     background: rgb(145, 21, 30);
+}
+.level5 .emphasis {
+    color: yellow;
 }
 .level4 {
     color: white;
     background: rgb(217, 28, 39);
 }
+.level4 .emphasis {
+    color: yellow;
+}
 .level3 {
     background: rgb(218, 111, 40);
+}
+.level3 .emphasis {
+    color: red;
 }
 .level2 {
     background: rgb(229, 190, 49);
 }
+.level2 .emphasis {
+    color: red;
+}
 .level1 {
     background: rgb(234, 225, 149);
+}
+.level1 .emphasis {
+    color: red;
 }

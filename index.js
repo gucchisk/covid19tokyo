@@ -21,8 +21,11 @@ function autonomy(name) {
   return ''
 }
 
-function dateString(file) {
-  console.log(new Date(file))
+function dateString(date) {
+  const y = date.substring(0, 4)
+  const m = date.substring(4, 6)
+  const d = date.substring(6, 8)
+  return [y, m, d].join('/')
 }
 
 async function getCSV(date) {
@@ -83,8 +86,7 @@ window.onload = async () => {
     error()
     return
   }
-  // const data = await getCSV('20200414')
-  document.getElementById('date').innerHTML = list[0]
+  document.getElementById('date').innerHTML = dateString(list[0])
   const data = await getData(list)
   
   if (data[0] === null || data[1] === null) {
@@ -115,7 +117,7 @@ window.onload = async () => {
       } else if (diff < 10) {
 	diffText = `<span class="plus">+${diff}</span>`
       } else {
-	diffText = `<span class="plus up">+${diff}</span>`
+	diffText = `<span class="plus emphasis">+${diff}</span>`
       }
     }
     let level = 1
