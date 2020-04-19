@@ -1,4 +1,3 @@
 const ENV = {
-  env: 'dev'
 }
       
