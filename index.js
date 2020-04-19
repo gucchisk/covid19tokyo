@@ -26,7 +26,13 @@ function dateString(file) {
 }
 
 async function getCSV(date) {
-  const res = await fetch(`csv/${date}.csv`)
+  let path
+  if (ENV.env === 'dev') {
+    path = 'dev'
+  } else {
+    path = 'csv'
+  }
+  const res = await fetch(`${path}/${date}.csv`)
   if (!res.ok) {
     return null
   }
@@ -46,7 +52,13 @@ async function getCSV(date) {
 }
 
 async function getDataList() {
-  const res = await fetch('latest.txt')
+  let path
+  if (ENV.env === 'dev') {
+    path = 'dev'
+  } else {
+    path = '.'
+  }
+  const res = await fetch(`${path}/latest.txt`)
   if (!res.ok) {
     return null
   }
@@ -61,14 +73,22 @@ async function getData(list) {
   return Promise.all(fetches)
 }
 
+function error() {
+  document.getElementById('grid-main').innerHTML = '<p class="message">ごめんなさい🙇‍データのロードに失敗しました。</p>'
+}
+
 window.onload = async () => {
   const list = await getDataList()
+  if (list === null) {
+    error()
+    return
+  }
   // const data = await getCSV('20200414')
   document.getElementById('date').innerHTML = list[0]
   const data = await getData(list)
   
   if (data[0] === null || data[1] === null) {
-    document.getElementById('grid-main').innerHTML = '<p class="message">ごめんなさい🙇‍データのロードに失敗しました。</p>'
+    error()
     return
   }
 
