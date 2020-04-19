@@ -1,0 +1,4 @@
+const ENV = {
+  env: 'dev'
+}
+      
