@@ -26,7 +26,7 @@ function dateString(file) {
 }
 
 async function getCSV(date) {
-  const res = await fetch(`${date}.csv`)
+  const res = await fetch(`csv/${date}.csv`)
   if (!res.ok) {
     return null
   }
