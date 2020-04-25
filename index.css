@@ -56,10 +56,11 @@ h2 {
     color: yellow;
 }
 .level3 {
+    color: white;
     background: rgb(218, 111, 40);
 }
 .level3 .emphasis {
-    color: red;
+    color: yellow;
 }
 .level2 {
     background: rgb(229, 190, 49);
