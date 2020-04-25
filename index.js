@@ -5,6 +5,8 @@ const city = ['八王子', '立川', '武蔵野', '三鷹', '青梅', '府中', 
 const town = ['瑞穂', '日の出', '奥多摩', '大島', '八丈']
 const village = ['檜原', '利島', '新島', '神津島', '三宅', '御蔵島', '青ヶ島', '小笠原']
 
+const baseurl = 'https://raw.githubusercontent.com/gucchisk/parse-tokyo-covid-report-pdf'
+
 function autonomy(name) {
   if (ward.includes(name)) {
     return '区'
@@ -28,14 +30,14 @@ function dateString(date) {
   return [y, m, d].join('/')
 }
 
-async function getCSV(date) {
-  let path
-  if (ENV.env === 'dev') {
-    path = 'dev'
-  } else {
-    path = 'csv'
-  }
-  const res = await fetch(`${path}/${date}.csv`)
+async function getCSV(filename) {
+  // let path
+  // if (ENV.env === 'dev') {
+  //   path = 'dev'
+  // } else {
+  //   path = 'csv'
+  // }
+  const res = await fetch(`${baseurl}/master/csv/${filename}`)
   if (!res.ok) {
     return null
   }
@@ -55,13 +57,13 @@ async function getCSV(date) {
 }
 
 async function getDataList() {
-  let path
-  if (ENV.env === 'dev') {
-    path = 'dev'
-  } else {
-    path = '.'
-  }
-  const res = await fetch(`${path}/latest.txt`)
+  // let path
+  // if (ENV.env === 'dev') {
+  //   path = 'dev'
+  // } else {
+  //   path = '.'
+  // }
+  const res = await fetch(`${baseurl}/master/list.txt`)
   if (!res.ok) {
     return null
   }
@@ -70,8 +72,8 @@ async function getDataList() {
 }
 
 async function getData(list) {
-  const fetches = list.map(name => {
-    return getCSV(name)
+  const fetches = list.map(filename => {
+    return getCSV(filename)
   })
   return Promise.all(fetches)
 }
