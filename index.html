@@ -1,8 +1,16 @@
 <html>
   <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-164568259-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-164568259-1');
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title></title>
+    <title>新型コロナ(Covid-19) 東京都 区市町村別情報</title>
     <script type="text/javascript" src="./env.js"></script>
     <script type="text/javascript" src="./index.js"></script>
     <link rel="stylesheet" href="./index.css"></link>
@@ -10,7 +18,7 @@
   <body>
     <div class="header">
       <div>
-	<h1>コロナ Covid-19<br>東京都 市町村別情報</h1>
+	<h1>新型コロナ(Covid-19)<br>東京都 区市町村別情報</h1>
       </div>
       <div>
 	<h2 id="date"></h2>
@@ -23,6 +31,9 @@
     <div class="footer">
       <div>
 	<p class="data">Data from <a href="https://www.bousai.metro.tokyo.lg.jp/taisaku/saigai/1007261/index.html" taret="_blank">東京都新型コロナウイルス感染症対策本部報</a></p>
+      </div>
+      <div>
+	<p class="copyright">©️ 2020 <a href="https://twitter.com/gucchisk" target="_blank">gucchisk</a></p>
       </div>
     </div>
   </body>
