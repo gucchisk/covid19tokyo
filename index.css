@@ -7,6 +7,9 @@ h1 {
 h2 {
     text-align: center;
 }
+h2 span {
+    font-size: 0.7em;
+}
 .ward {
     font-size: 20vm;
 }

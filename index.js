@@ -6,6 +6,7 @@ const town = ['瑞穂', '日の出', '奥多摩', '大島', '八丈']
 const village = ['檜原', '利島', '新島', '神津島', '三宅', '御蔵島', '青ヶ島', '小笠原']
 
 const baseurl = 'https://raw.githubusercontent.com/gucchisk/parse-tokyo-covid-report-pdf'
+const dataurl = 'https://raw.githubusercontent.com/tokyo-metropolitan-gov/covid19/gh-pages/data/130001_tokyo_covid19_patients.csv'
 
 function autonomy(name) {
   if (ward.includes(name)) {
@@ -71,6 +72,19 @@ async function getDataList() {
   return text.split("\n").filter(x => x !== "")
 }
 
+async function getCountTokyo(datestr) {
+  const dateText = `${datestr.substring(0, 4)}-${datestr.substring(4, 6)}-${datestr.substring(6, 8)}`
+  console.log(dateText)
+  const res = await fetch(dataurl)
+  if (!res.ok) {
+    return null
+  }
+  const text = await res.text()
+  return text.split('\n').filter(line => {
+    return line.split(',')[4] == dateText
+  }).length
+}
+
 async function getData(list) {
   const fetches = list.map(filename => {
     return getCSV(filename)
@@ -88,7 +102,9 @@ window.onload = async () => {
     error()
     return
   }
-  document.getElementById('date').innerHTML = dateString(list[0])
+  getCountTokyo(list[0]).then(count => {
+    document.getElementById('date').innerHTML = `${dateString(list[0])} - ${count}<span>人</span>`
+  })
   const data = await getData(list)
   
   if (data[0] === null || data[1] === null) {
