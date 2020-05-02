@@ -207,34 +207,27 @@ window.onload = async () => {
   $('.clickpop').magnificPopup({
     removalDelay: 300,
     callbacks: {
-      beforeOpen: async function() {
-	const el = this.st.el
-	const id = el.attr('id')
-	const name = el.children('.ward').text();
-	const filename = `${id}.csv`
-	this.st.mainClass = el.attr('data-effect')
-	const start = new Date().getTime()
-	const res = await fetch(`${baseurl}/master/data/${filename}`)
-	const text = await res.text()
-	const lines = text.split('\n')
-	const x = ['x']
-	const values = [name]
-	lines.forEach(line => {
-	  const datevalue = line.split(',')
-	  if (datevalue[1] !== undefined) {
-	    const date = datevalue[0]
-	    x.push(`${date.substring(4, 6)}/${date.substring(6, 8)}`)
-	    values.push(datevalue[1])
-	  }
-	})
-	const msecond = 200 - (new Date().getTime() - start)
-	const timeout = (msecond < 0) ? 0 : msecond
-	setTimeout(() => {
+      beforeOpen: function() {
+	this.st.mainClass = this.st.el.attr('data-effect')
+      },
+      open: async function() {
+	setTimeout(async () => {
+	  const el = this.st.el
+	  const id = el.attr('id')
+	  const name = el.children('.ward').text()
+	  let x = ['x']
+	  let values = [name]
+	  list.forEach((l) => {
+	    x.push(`${l.substring(4, 6)}/${l.substring(6, 8)}`)
+	    values.push(0)
+	  })
+	  const filename = `${id}.csv`
 	  const chart = c3.generate({
 	    bindto: '#chart',
 	    data: {
 	      x: 'x',
 	      xFormat: '%m/%d',
+	      // hide: [''],
 	      columns: [
 		x,
 		values
@@ -259,11 +252,27 @@ window.onload = async () => {
 	      }
 	    }
 	  })
-	}, timeout)
+	  const res = await fetch(`${baseurl}/master/data/${filename}`)
+	  const text = await res.text()
+	  const lines = text.split('\n')
+	  x = ['x']
+	  values = [name]
+	  lines.forEach(line => {
+	    const datevalue = line.split(',')
+	    if (datevalue[1] !== undefined) {
+	      const date = datevalue[0]
+	      x.push(`${date.substring(4, 6)}/${date.substring(6, 8)}`)
+	      values.push(datevalue[1])
+	    }
+	  })
+	  chart.load({
+	    columns: [
+	      x,
+	      values
+	    ]
+	  })
+	}, 200)
       },
-      close: function() {
-	$('#chart').html('')
-      }
     },
     midClick: true
   })
