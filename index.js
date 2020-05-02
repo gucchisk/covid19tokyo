@@ -207,57 +207,65 @@ window.onload = async () => {
   $('.clickpop').magnificPopup({
     removalDelay: 300,
     callbacks: {
-      beforeOpen: function() {
+      beforeOpen: async function() {
 	const el = this.st.el
 	const id = el.attr('id')
 	const name = el.children('.ward').text();
 	const filename = `${id}.csv`
 	this.st.mainClass = el.attr('data-effect')
-	fetch(`${baseurl}/master/data/${filename}`).then(res => {
-	  return res.text()
-	}).then(text => {
-	  const lines = text.split('\n')
-	  const x = ['x']
-	  const values = [name]
-	  lines.forEach(line => {
-	    const datevalue = line.split(',')
-	    if (datevalue[1] !== undefined) {
-	      const date = datevalue[0]
-	      x.push(`${date.substring(4, 6)}/${date.substring(6, 8)}`)
-	      values.push(datevalue[1])
-	    }
-	  })
-
-	  const chart = c3.generate({
-	    bindto: '#chart',
-	    data: {
-	      x: 'x',
-	      xFormat: '%m/%d',
-	      columns: [
-		x,
-		values
-	      ],
-	      groups: [
-		['value']
-	      ],
-	      type: 'bar'
-	    },
-	    bar: {
-	      width: {
-		ratio: 0.5
-	      }
-	    },
-	    axis: {
-	      x: {
-		type: 'timeseries',
-		tick: {
-		  culling: true,
-		  format: '%m/%d'
-		}
-	      }
-	    }
-	  })
+	const res = await fetch(`${baseurl}/master/data/${filename}`)
+	const text = await res.text()
+	const lines = text.split('\n')
+	const x = ['x']
+	const values = [name]
+	lines.forEach(line => {
+	  const datevalue = line.split(',')
+	  if (datevalue[1] !== undefined) {
+	    const date = datevalue[0]
+	    x.push(`${date.substring(4, 6)}/${date.substring(6, 8)}`)
+	    values.push(datevalue[1])
+	  }
 	})
+	const chart = c3.generate({
+	  bindto: '#chart',
+	  data: {
+	    x: 'x',
+	    xFormat: '%m/%d',
+	    columns: [
+	      x,
+	      values
+	    ],
+	    groups: [
+	      ['value']
+	    ],
+	    type: 'bar'
+	  },
+	  bar: {
+	    width: {
+	      ratio: 0.5
+	    }
+	  },
+	  axis: {
+	    x: {
+	      type: 'timeseries',
+	      tick: {
+	  	culling: true,
+	  	format: '%m/%d'
+	      }
+	    }
+	  }
+	})
+	const resize = (ch) => {
+	  const width = $('#popup').width()
+	  ch.resize({
+	    width: width
+	  })
+	  ch.flush()
+	}
+	resize(chart)
+	setTimeout(() => {
+	  resize(chart)
+	}, 200)
       }
     },
     midClick: true
