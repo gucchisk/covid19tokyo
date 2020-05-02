@@ -222,12 +222,11 @@ window.onload = async () => {
 	    values.push(0)
 	  })
 	  const filename = `${id}.csv`
-	  const chart = c3.generate({
+	  this.chart = c3.generate({
 	    bindto: '#chart',
 	    data: {
 	      x: 'x',
 	      xFormat: '%m/%d',
-	      // hide: [''],
 	      columns: [
 		x,
 		values
@@ -265,7 +264,7 @@ window.onload = async () => {
 	      values.push(datevalue[1])
 	    }
 	  })
-	  chart.load({
+	  this.chart.load({
 	    columns: [
 	      x,
 	      values
@@ -273,6 +272,11 @@ window.onload = async () => {
 	  })
 	}, 200)
       },
+      close: function() {
+	this.chart.unload({
+	  ids: [this.st.el.children('.ward').text()]
+	})
+      }
     },
     midClick: true
   })
