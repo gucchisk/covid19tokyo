@@ -213,6 +213,7 @@ window.onload = async () => {
 	const name = el.children('.ward').text();
 	const filename = `${id}.csv`
 	this.st.mainClass = el.attr('data-effect')
+	const start = new Date().getTime()
 	const res = await fetch(`${baseurl}/master/data/${filename}`)
 	const text = await res.text()
 	const lines = text.split('\n')
@@ -226,46 +227,42 @@ window.onload = async () => {
 	    values.push(datevalue[1])
 	  }
 	})
-	const chart = c3.generate({
-	  bindto: '#chart',
-	  data: {
-	    x: 'x',
-	    xFormat: '%m/%d',
-	    columns: [
-	      x,
-	      values
-	    ],
-	    groups: [
-	      ['value']
-	    ],
-	    type: 'bar'
-	  },
-	  bar: {
-	    width: {
-	      ratio: 0.5
-	    }
-	  },
-	  axis: {
-	    x: {
-	      type: 'timeseries',
-	      tick: {
-	  	culling: true,
-	  	format: '%m/%d'
+	const msecond = 200 - (new Date().getTime() - start)
+	const timeout = (msecond < 0) ? 0 : msecond
+	setTimeout(() => {
+	  const chart = c3.generate({
+	    bindto: '#chart',
+	    data: {
+	      x: 'x',
+	      xFormat: '%m/%d',
+	      columns: [
+		x,
+		values
+	      ],
+	      groups: [
+		['value']
+	      ],
+	      type: 'bar'
+	    },
+	    bar: {
+	      width: {
+		ratio: 0.5
+	      }
+	    },
+	    axis: {
+	      x: {
+		type: 'timeseries',
+		tick: {
+	  	  culling: true,
+	  	  format: '%m/%d'
+		}
 	      }
 	    }
-	  }
-	})
-	const resize = (ch) => {
-	  const width = $('#popup').width()
-	  ch.resize({
-	    width: width
 	  })
-	  ch.flush()
-	}
-	resize(chart)
-	setTimeout(() => {
-	  resize(chart)
-	}, 200)
+	}, timeout)
+      },
+      close: function() {
+	$('#chart').html('')
       }
     },
     midClick: true
