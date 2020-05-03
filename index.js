@@ -64,6 +64,9 @@ const wardData = {
   '小笠原': { autonomy: '村', id: 'ogasawara' }
 }
 
+const totalLabel = '累計'
+const dayLabel = '日別'
+
 const baseurl = 'https://raw.githubusercontent.com/gucchisk/parse-tokyo-covid-report-pdf'
 const dataurl = 'https://raw.githubusercontent.com/tokyo-metropolitan-gov/covid19/gh-pages/data/130001_tokyo_covid19_patients.csv'
 
@@ -208,7 +211,11 @@ window.onload = async () => {
     removalDelay: 300,
     callbacks: {
       beforeOpen: function() {
-	this.st.mainClass = this.st.el.attr('data-effect')
+	const el = this.st.el
+	const name = el.children('.ward').text()
+	$('#charttitle').html(name)
+	this.st.mainClass = el.attr('data-effect')
+
       },
       open: async function() {
 	setTimeout(async () => {
@@ -216,20 +223,24 @@ window.onload = async () => {
 	  const id = el.attr('id')
 	  const name = el.children('.ward').text()
 	  let x = ['x']
-	  let values = [name]
+	  let total = [totalLabel]
+	  let day = [dayLabel]
 	  list.forEach((l) => {
 	    x.push(`${l.substring(4, 6)}/${l.substring(6, 8)}`)
-	    values.push(0)
+	    total.push(0)
+	    day.push(0)
 	  })
 	  const filename = `${id}.csv`
 	  this.chart = c3.generate({
 	    bindto: '#chart',
 	    data: {
 	      x: 'x',
+	      hide: [totalLabel],
 	      xFormat: '%m/%d',
 	      columns: [
 		x,
-		values
+		day,
+		total
 	      ],
 	      groups: [
 		['value']
@@ -255,20 +266,25 @@ window.onload = async () => {
 	  const text = await res.text()
 	  const lines = text.split('\n')
 	  x = ['x']
-	  values = [name]
-	  lines.forEach(line => {
+	  total = [totalLabel]
+	  day = [dayLabel, 0]
+	  lines.forEach((line, index) => {
 	    const datevalue = line.split(',')
 	    if (datevalue[1] !== undefined) {
 	      const date = datevalue[0]
 	      x.push(`${date.substring(4, 6)}/${date.substring(6, 8)}`)
-	      values.push(datevalue[1])
+	      if (index !== 0) {
+		day.push(datevalue[1] - total[total.length - 1])
+	      }
+	      total.push(datevalue[1])
 	    }
 	  })
 	  this.chart.load({
 	    columns: [
 	      x,
-	      values
-	    ]
+	      day,
+	      total
+	    ],
 	  })
 	}, 200)
       },

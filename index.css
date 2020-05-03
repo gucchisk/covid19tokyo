@@ -13,6 +13,9 @@ h2 span {
 .clickpop {
     cursor: pointer;
 }
+#charttitle {
+    text-align: center;
+}
 .ward {
     font-size: 20vm;
 }
