@@ -179,16 +179,18 @@ window.onload = async () => {
   data[0].forEach((obj, i) => {
     const div = document.createElement('div')
     const diff = parseInt(obj.num) - parseInt(data[1][i].num)
-    let diffText
-    if (diff === 0) {
-      diffText = "±0";
-    } else {
-      if (diff < 0) {
-	diffText = `<span class="plus">${diff}</span>`
-      } else if (diff < 10) {
-	diffText = `<span class="plus">+${diff}</span>`
+    let diffText = ""
+    if (Object.keys(wardData).includes(obj.ward)) {
+      if (diff === 0) {
+	diffText = "(±0)";
       } else {
-	diffText = `<span class="plus emphasis">+${diff}</span>`
+	if (diff < 0) {
+	  diffText = `(<span class="plus">${diff}</span>)`
+	} else if (diff < 10) {
+	  diffText = `(<span class="plus">+${diff}</span>)`
+	} else {
+	  diffText = `(<span class="plus emphasis">+${diff}</span>)`
+	}
       }
     }
     let level = 1
@@ -203,7 +205,7 @@ window.onload = async () => {
     if (wdata !== undefined) {
       divtag = `<div id="${wdata.id}" class="clickpop" href="#popup" data-effect="mfp-zoom-in">`
     }
-    div.innerHTML = `${divtag}<p class="ward">${name}</p><p class="num">${obj.num} (${diffText})</p></div>`
+    div.innerHTML = `${divtag}<p class="ward">${name}</p><p class="num">${obj.num} ${diffText}</p></div>`
     document.getElementById('grid-main').append(div)
   })
 
