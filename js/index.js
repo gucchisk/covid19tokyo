@@ -150,6 +150,7 @@ function error() {
 }
 
 window.onload = async () => {
+  const start = new Date().getMilliseconds()
   const list = await getDataList()
   if (list === null) {
     error()
@@ -209,7 +210,11 @@ window.onload = async () => {
     document.getElementById('grid-main').append(div)
   })
 
-  $('.loader').removeClass('is-active')
+  const end = new Date().getMilliseconds()
+  const timeout = (end - start) < 1000 ? 1000 - (end - start) : 0
+  setTimeout(() => {
+    $('.loader').removeClass('is-active')
+  }, timeout)
 
   $('.clickpop').magnificPopup({
     removalDelay: 300,
