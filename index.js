@@ -150,10 +150,6 @@ function error() {
 }
 
 window.onload = async () => {
-  $.LoadingOverlay('show', {
-    background: 'rgba(255, 255, 255, 1)'
-  })
-
   const list = await getDataList()
   if (list === null) {
     error()
@@ -211,9 +207,9 @@ window.onload = async () => {
     }
     div.innerHTML = `${divtag}<p class="ward">${name}</p><p class="num">${obj.num} ${diffText}</p></div>`
     document.getElementById('grid-main').append(div)
-
-    $.LoadingOverlay('hide')
   })
+
+  $('.loader').removeClass('is-active')
 
   $('.clickpop').magnificPopup({
     removalDelay: 300,
