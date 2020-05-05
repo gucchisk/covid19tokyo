@@ -151,7 +151,8 @@ function error() {
 
 window.onload = async () => {
   const start = new Date().getMilliseconds()
-  const list = await getDataList()
+  const all = await getDataList()
+  const list = [all[0], all[1]]
   if (list === null) {
     error()
     return
@@ -224,7 +225,6 @@ window.onload = async () => {
 	const name = el.children('.ward').text()
 	$('#charttitle').html(name)
 	this.st.mainClass = el.attr('data-effect')
-
       },
       open: async function() {
 	setTimeout(async () => {
