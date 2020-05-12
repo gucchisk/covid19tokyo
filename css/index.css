@@ -6,9 +6,20 @@ h1 {
 }
 h2 {
     text-align: center;
+    margin-bottom: 5px;
 }
 h2 span {
     font-size: 0.7em;
+}
+.info {
+    text-align: center;
+    font-size: 15vm;
+    color: rgb(217, 28, 39);
+    margin-bottom: 10px;
+}
+.info span {
+    font-size: 2em;
+    vertical-align: middle;
 }
 .clickpop {
     cursor: pointer;
