@@ -15,11 +15,16 @@ h2 span {
     text-align: center;
     font-size: 15vm;
     color: rgb(217, 28, 39);
-    margin-bottom: 10px;
+    margin: 0 auto 10px auto;
 }
 .info span {
-    font-size: 2em;
-    vertical-align: middle;
+    font-size: 2.5em;
+}
+.info p {
+    text-align: left;
+    margin-top: 0;
+    margin-bottom: 0;
+    display: inline-block;
 }
 .clickpop {
     cursor: pointer;
