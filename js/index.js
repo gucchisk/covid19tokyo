@@ -177,7 +177,13 @@ window.onload = async () => {
       max = current
     }
   })
-  const range = max / 5
+
+  const range = Math.floor(max / 31)
+  const level1 = range
+  const level2 = range * 3
+  const level3 = range * 7
+  const level4 = range * 15
+
   data[0].forEach((obj, i) => {
     const div = document.createElement('div')
     const diff = parseInt(obj.num) - parseInt(data[1][i].num)
@@ -197,8 +203,16 @@ window.onload = async () => {
     }
     let level = 1
     if (i < data[0].length - 2) {
-      level = Math.floor((parseInt(obj.num) / range) + 1)
-      level = level > 5 ? 5 : level
+      const num = parseInt(obj.num)
+      if (num > level4) {
+	level = 5
+      } else if (num > level3) {
+	level = 4
+      } else if (num > level2) {
+	level = 3
+      } else if (num > level1) {
+	level = 2
+      }
     }
     div.className = `item level${level}`
     const name = obj.ward + autonomy(obj.ward)
