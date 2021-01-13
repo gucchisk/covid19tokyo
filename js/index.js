@@ -249,7 +249,7 @@ window.onload = async () => {
 	  let total = [totalLabel]
 	  let day = [dayLabel]
 	  list.forEach((l) => {
-	    x.push(`${l.substring(4, 6)}/${l.substring(6, 8)}`)
+	    x.push(`${l.substring(0, 4)}/${l.substring(4, 6)}/${l.substring(6, 8)}`)
 	    total.push(0)
 	    day.push(0)
 	  })
@@ -259,7 +259,7 @@ window.onload = async () => {
 	    data: {
 	      x: 'x',
 	      hide: [totalLabel],
-	      xFormat: '%m/%d',
+	      xFormat: '%Y/%m/%d',
 	      columns: [
 		x,
 		day,
@@ -279,8 +279,8 @@ window.onload = async () => {
 	      x: {
 		type: 'timeseries',
 		tick: {
-	  	  culling: true,
-	  	  format: '%m/%d'
+		  culling: true,
+		  format: '%Y/%m/%d'
 		}
 	      }
 	    }
@@ -295,7 +295,7 @@ window.onload = async () => {
 	    const datevalue = line.split(',')
 	    if (datevalue[1] !== undefined) {
 	      const date = datevalue[0]
-	      x.push(`${date.substring(4, 6)}/${date.substring(6, 8)}`)
+	      x.push(`${date.substring(0, 4)}/${date.substring(4, 6)}/${date.substring(6, 8)}`)
 	      if (index !== 0) {
 		day.push(datevalue[1] - total[total.length - 1])
 	      }
