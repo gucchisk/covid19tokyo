@@ -254,6 +254,31 @@ window.onload = async () => {
 	    day.push(0)
 	  })
 	  const filename = `${id}.csv`
+
+	  const res = await fetch(`${baseurl}/master/data/${filename}`)
+	  const text = await res.text()
+	  const lines = text.split('\n')
+	  x = ['x']
+	  total = [totalLabel]
+	  day = [dayLabel, 0]
+	  lines.forEach((line, index) => {
+	    const datevalue = line.split(',')
+	    if (datevalue[1] !== undefined) {
+	      const date = datevalue[0]
+	      x.push(`${date.substring(0, 4)}/${date.substring(4, 6)}/${date.substring(6, 8)}`)
+	      if (index !== 0) {
+		day.push(datevalue[1] - total[total.length - 1])
+	      }
+	      total.push(datevalue[1])
+	    }
+	  })
+	  // this.chart.load({
+	  //   columns: [
+	  //     x,
+	  //     day,
+	  //     total
+	  //   ],
+	  // })
 	  this.chart = c3.generate({
 	    bindto: '#chart',
 	    data: {
@@ -280,35 +305,20 @@ window.onload = async () => {
 		type: 'timeseries',
 		tick: {
 		  culling: true,
-		  format: '%Y/%m/%d'
-		}
+		  format: '%m/%d'
+		},
+		extent: ['2020/10/01', x[x.length-1]]
 	      }
+	    },
+	    subchart: {
+	      show: true,
+	    },
+	    zoom: {
+	      enabled: true,
+	      rescale: true
 	    }
 	  })
-	  const res = await fetch(`${baseurl}/master/data/${filename}`)
-	  const text = await res.text()
-	  const lines = text.split('\n')
-	  x = ['x']
-	  total = [totalLabel]
-	  day = [dayLabel, 0]
-	  lines.forEach((line, index) => {
-	    const datevalue = line.split(',')
-	    if (datevalue[1] !== undefined) {
-	      const date = datevalue[0]
-	      x.push(`${date.substring(0, 4)}/${date.substring(4, 6)}/${date.substring(6, 8)}`)
-	      if (index !== 0) {
-		day.push(datevalue[1] - total[total.length - 1])
-	      }
-	      total.push(datevalue[1])
-	    }
-	  })
-	  this.chart.load({
-	    columns: [
-	      x,
-	      day,
-	      total
-	    ],
-	  })
+	  this.chart.zoom(['2020/10/01', x[x.length-1]])
 	}, 200)
       },
       close: function() {
