@@ -306,8 +306,7 @@ window.onload = async () => {
 		tick: {
 		  culling: true,
 		  format: '%m/%d'
-		},
-		extent: ['2020/10/01', x[x.length-1]]
+		}
 	      }
 	    },
 	    subchart: {
@@ -318,7 +317,10 @@ window.onload = async () => {
 	      rescale: true
 	    }
 	  })
-	  this.chart.zoom(['2020/10/01', x[x.length-1]])
+	  // this.chart.zoom(['2020/10/01', x[x.length-1]])
+	  const d = new Date()
+	  const today = `${d.getFullYear()}/${(d.getMonth()+1).toString().padStart(2, '0')}/${d.getDate().toString().padStart(2, '0')}`
+	  this.chart.zoom(['2020/10/01', today])
 	}, 200)
       },
       close: function() {
