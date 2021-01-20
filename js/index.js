@@ -229,6 +229,10 @@ window.onload = async () => {
   const timeout = (end - start) < 1000 ? 1000 - (end - start) : 0
   setTimeout(() => {
     $('.loader').removeClass('is-active')
+
+    const query = [...new URLSearchParams($(location).attr('search')).entries()]
+	  .reduce((obj, e) => ({...obj, [e[0]]: e[1]}), {})
+    $(`#${query.id}`).click()
   }, timeout)
 
   $('.clickpop').magnificPopup({
@@ -321,12 +325,17 @@ window.onload = async () => {
 	  const d = new Date()
 	  const today = `${d.getFullYear()}/${(d.getMonth()+1).toString().padStart(2, '0')}/${d.getDate().toString().padStart(2, '0')}`
 	  this.chart.zoom(['2020/10/01', today])
+
+	  const historyObj = { Title: '', Url: `?id=${id}` };
+          history.pushState(historyObj, historyObj.Title, historyObj.Url);
 	}, 200)
       },
       close: function() {
 	this.chart.unload({
 	  ids: [this.st.el.children('.ward').text()]
 	})
+	const historyObj = { Title: '', Url: '/' };
+        history.pushState(historyObj, historyObj.Title, historyObj.Url);
       }
     },
     midClick: true
