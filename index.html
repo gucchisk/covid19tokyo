@@ -23,7 +23,10 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="./c3/c3.min.js"></script>
     <script src="magnific-popup/jquery.magnific-popup.min.js"></script>
-    <script type="text/javascript" src="./js/index.js"></script>
+    <script type="module">
+      import { onloadWindow } from './js/index.js'
+      window.onload = onloadWindow()
+    </script>
   </head>
   <body>
     <div class="loader loader-default is-active"></div>

@@ -58,7 +58,7 @@ const wardData = {
   '利島': { autonomy: '村', id: 'toshimamura' },
   '新島': { autonomy: '村', id: 'niijima' },
   '神津島': { autonomy: '村', id: 'kouzushima' },
-  '三宅': { autonomy: '村', id: 'miyake' },  
+  '三宅': { autonomy: '村', id: 'miyake' },
   '御蔵島': { autonomy: '村', id: 'mikurasima' },
   '青ヶ島': { autonomy: '村', id: 'aogashima' },
   '小笠原': { autonomy: '村', id: 'ogasawara' }
@@ -149,7 +149,16 @@ function error() {
   document.getElementById('grid-main').innerHTML = '<p class="message">ごめんなさい🙇‍データのロードに失敗しました。</p>'
 }
 
-window.onload = async () => {
+function dateToStr(date) {
+  return `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`
+}
+
+export function focusStartDateStr(today) {
+  const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90)
+  return dateToStr(date)
+}
+
+export async function onloadWindow() {
   const start = new Date().getMilliseconds()
   const all = await getDataList()
   const list = [all[0], all[1]]
@@ -190,28 +199,28 @@ window.onload = async () => {
     let diffText = ""
     if (Object.keys(wardData).includes(obj.ward)) {
       if (diff === 0) {
-	diffText = "(±0)";
+        diffText = "(±0)";
       } else {
-	if (diff < 0) {
-	  diffText = `(<span class="plus">${diff}</span>)`
-	} else if (diff < 10) {
-	  diffText = `(<span class="plus">+${diff}</span>)`
-	} else {
-	  diffText = `(<span class="plus emphasis">+${diff}</span>)`
-	}
+        if (diff < 0) {
+          diffText = `(<span class="plus">${diff}</span>)`
+        } else if (diff < 10) {
+          diffText = `(<span class="plus">+${diff}</span>)`
+        } else {
+          diffText = `(<span class="plus emphasis">+${diff}</span>)`
+        }
       }
     }
     let level = 1
     if (i < data[0].length - 2) {
       const num = parseInt(obj.num)
       if (num > level4) {
-	level = 5
+        level = 5
       } else if (num > level3) {
-	level = 4
+        level = 4
       } else if (num > level2) {
-	level = 3
+        level = 3
       } else if (num > level1) {
-	level = 2
+        level = 2
       }
     }
     div.className = `item level${level}`
@@ -231,7 +240,7 @@ window.onload = async () => {
     $('.loader').removeClass('is-active')
 
     const query = [...new URLSearchParams($(location).attr('search')).entries()]
-	  .reduce((obj, e) => ({...obj, [e[0]]: e[1]}), {})
+      .reduce((obj, e) => ({ ...obj, [e[0]]: e[1] }), {})
     $(`#${query.id}`).click()
   }, timeout)
 
@@ -239,102 +248,102 @@ window.onload = async () => {
     removalDelay: 300,
     callbacks: {
       beforeOpen: function() {
-	const el = this.st.el
-	const name = el.children('.ward').text()
-	$('#charttitle').html(name)
-	this.st.mainClass = el.attr('data-effect')
+        const el = this.st.el
+        const name = el.children('.ward').text()
+        $('#charttitle').html(name)
+        this.st.mainClass = el.attr('data-effect')
       },
       open: async function() {
-	setTimeout(async () => {
-	  const el = this.st.el
-	  const id = el.attr('id')
-	  const name = el.children('.ward').text()
-	  let x = ['x']
-	  let total = [totalLabel]
-	  let day = [dayLabel]
-	  list.forEach((l) => {
-	    x.push(`${l.substring(0, 4)}/${l.substring(4, 6)}/${l.substring(6, 8)}`)
-	    total.push(0)
-	    day.push(0)
-	  })
-	  const filename = `${id}.csv`
+        setTimeout(async () => {
+          const el = this.st.el
+          const id = el.attr('id')
+          const name = el.children('.ward').text()
+          let x = ['x']
+          let total = [totalLabel]
+          let day = [dayLabel]
+          list.forEach((l) => {
+            x.push(`${l.substring(0, 4)}/${l.substring(4, 6)}/${l.substring(6, 8)}`)
+            total.push(0)
+            day.push(0)
+          })
+          const filename = `${id}.csv`
 
-	  const res = await fetch(`${baseurl}/master/data/${filename}`)
-	  const text = await res.text()
-	  const lines = text.split('\n')
-	  x = ['x']
-	  total = [totalLabel]
-	  day = [dayLabel, 0]
-	  lines.forEach((line, index) => {
-	    const datevalue = line.split(',')
-	    if (datevalue[1] !== undefined) {
-	      const date = datevalue[0]
-	      x.push(`${date.substring(0, 4)}/${date.substring(4, 6)}/${date.substring(6, 8)}`)
-	      if (index !== 0) {
-		day.push(datevalue[1] - total[total.length - 1])
-	      }
-	      total.push(datevalue[1])
-	    }
-	  })
-	  // this.chart.load({
-	  //   columns: [
-	  //     x,
-	  //     day,
-	  //     total
-	  //   ],
-	  // })
-	  this.chart = c3.generate({
-	    bindto: '#chart',
-	    data: {
-	      x: 'x',
-	      hide: [totalLabel],
-	      xFormat: '%Y/%m/%d',
-	      columns: [
-		x,
-		day,
-		total
-	      ],
-	      groups: [
-		['value']
-	      ],
-	      type: 'bar'
-	    },
-	    bar: {
-	      width: {
-		ratio: 0.5
-	      }
-	    },
-	    axis: {
-	      x: {
-		type: 'timeseries',
-		tick: {
-		  culling: true,
-		  format: '%m/%d'
-		}
-	      }
-	    },
-	    subchart: {
-	      show: true,
-	    },
-	    zoom: {
-	      enabled: true,
-	      rescale: true
-	    }
-	  })
-	  // this.chart.zoom(['2020/10/01', x[x.length-1]])
-	  const d = new Date()
-	  const today = `${d.getFullYear()}/${(d.getMonth()+1).toString().padStart(2, '0')}/${d.getDate().toString().padStart(2, '0')}`
-	  this.chart.zoom(['2020/10/01', today])
+          const res = await fetch(`${baseurl}/master/data/${filename}`)
+          const text = await res.text()
+          const lines = text.split('\n')
+          x = ['x']
+          total = [totalLabel]
+          day = [dayLabel, 0]
+          lines.forEach((line, index) => {
+            const datevalue = line.split(',')
+            if (datevalue[1] !== undefined) {
+              const date = datevalue[0]
+              x.push(`${date.substring(0, 4)}/${date.substring(4, 6)}/${date.substring(6, 8)}`)
+              if (index !== 0) {
+                day.push(datevalue[1] - total[total.length - 1])
+              }
+              total.push(datevalue[1])
+            }
+          })
+          // this.chart.load({
+          //   columns: [
+          //     x,
+          //     day,
+          //     total
+          //   ],
+          // })
+          this.chart = c3.generate({
+            bindto: '#chart',
+            data: {
+              x: 'x',
+              hide: [totalLabel],
+              xFormat: '%Y/%m/%d',
+              columns: [
+                x,
+                day,
+                total
+              ],
+              groups: [
+                ['value']
+              ],
+              type: 'bar'
+            },
+            bar: {
+              width: {
+                ratio: 0.5
+              }
+            },
+            axis: {
+              x: {
+                type: 'timeseries',
+                tick: {
+                  culling: true,
+                  format: '%m/%d'
+                }
+              }
+            },
+            subchart: {
+              show: true,
+            },
+            zoom: {
+              enabled: true,
+              rescale: true
+            }
+          })
+          const today = new Date()
+          const start = focusStartDateStr(today)
+          const end = dateToStr(today)
+          this.chart.zoom([start, end])
 
-	  const historyObj = { Title: '', Url: `?id=${id}` };
+          const historyObj = { Title: '', Url: `?id=${id}` };
           history.pushState(historyObj, historyObj.Title, historyObj.Url);
-	}, 200)
+        }, 200)
       },
       close: function() {
-	this.chart.unload({
-	  ids: [this.st.el.children('.ward').text()]
-	})
-	const historyObj = { Title: '', Url: '/' };
+        this.chart.unload({
+          ids: [this.st.el.children('.ward').text()]
+        })
+        const historyObj = { Title: '', Url: '/' };
         history.pushState(historyObj, historyObj.Title, historyObj.Url);
       }
     },
