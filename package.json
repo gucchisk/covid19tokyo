@@ -1,0 +1,22 @@
+{
+  "name": "covid19tokyo",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gucchisk/covid19tokyo.git"
+  },
+  "author": "gucchisk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gucchisk/covid19tokyo/issues"
+  },
+  "homepage": "https://github.com/gucchisk/covid19tokyo#readme",
+  "devDependencies": {
+    "jest": "^27.4.7"
+  }
+}
